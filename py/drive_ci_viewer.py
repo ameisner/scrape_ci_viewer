@@ -17,10 +17,14 @@ def get_ci_image_urls(verbose=False):
     if verbose:
         print(driver.page_source)
 
-    elem_image_w = driver.find_element_by_id("image_CIW")
+    ci_names = ['CIE', 'CIN', 'CIC', 'CIS', 'CIW']
 
-    url_w = elem_image_w.get_attribute("src")
+    image_urls = []
+    for ci_name in ci_names:
+        elem_image_w = driver.find_element_by_id("image_" + ci_name)
+
+        image_urls.append(elem_image_w.get_attribute("src"))
 
     driver.close()
 
-    return url_w
+    return dict(zip(ci_names, image_urls))
