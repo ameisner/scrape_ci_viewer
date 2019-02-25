@@ -1,8 +1,9 @@
 import astropy.io.fits as fits
 import numpy as np
 from time import sleep
+from drive_ci_viewer import get_ci_image_urls
 
-def random_pointings_subset(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
+def random_pointings_subset(n=100, seed=99, desi_pass=0):
     desi_tiles = fits.getdata('../etc/desi-tiles.fits')
 
     desi_tiles = desi_tiles[(desi_tiles['IN_DESI'] == True) & 
@@ -18,3 +19,15 @@ def random_pointings_subset(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
     assert(len(np.unique(desi_tiles['TILEID'])) == n)
 
     return desi_tiles
+
+def loop_desi_pointings(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
+
+    tiles = random_pointings_subset(n=n, seed=seed, desi_pass=desi_pass)
+
+    result = dict(zip(tiles['TILEID'], [None]*n))
+
+    for i, tile in enumerate(tiles):
+        result[tile['TILEID']] = get_ci_image_urls(tile['RA'], tile['DEC'])
+        if i != (n-1):
+            sleep(delay_seconds)
+    return result
