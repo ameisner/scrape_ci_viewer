@@ -23,4 +23,8 @@ elem_go.click()
 
 print(driver.page_source)
 
+elem_image_w = driver.find_element_by_id("image_CIW")
+
+url_w = elem_image_w.get_attribute("src")
+
 driver.close()
