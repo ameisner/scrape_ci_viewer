@@ -2,7 +2,7 @@ import astropy.io.fits as fits
 import numpy as np
 from time import sleep
 
-def loop_desi_pointings(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
+def random_pointings_subset(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
     desi_tiles = fits.getdata('../etc/desi-tiles.fits')
 
     desi_tiles = desi_tiles[(desi_tiles['IN_DESI'] == True) & 
