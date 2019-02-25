@@ -3,6 +3,7 @@ import numpy as np
 from time import sleep
 from drive_ci_viewer import get_ci_image_urls
 import pickle
+import os
 
 def random_pointings_subset(n=100, seed=99, desi_pass=0):
     desi_tiles = fits.getdata('../etc/desi-tiles.fits')
@@ -23,6 +24,10 @@ def random_pointings_subset(n=100, seed=99, desi_pass=0):
 
 def loop_desi_pointings(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
 
+    outname = 'ci_viewer_urls-seed' + str(seed) + '_n' + str(n) + '.pkl'
+
+    assert(not os.path.exists(outname))
+
     tiles = random_pointings_subset(n=n, seed=seed, desi_pass=desi_pass)
 
     result = dict(zip(tiles['TILEID'], [None]*n))
@@ -32,4 +37,7 @@ def loop_desi_pointings(n=100, seed=99, desi_pass=0, delay_seconds=10.0):
         result[tile['TILEID']] = get_ci_image_urls(tile['RA'], tile['DEC'])
         if i != (n-1):
             sleep(delay_seconds)
+
+    pickle.dump(result, open(outname, "wb"))
+
     return result
